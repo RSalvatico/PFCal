@@ -16,12 +16,12 @@ https://twiki.cern.ch/twiki/bin/view/Sandbox/AnnemarieMagnanSandbox
 for what needs to be put in the homemade classes and makefile for root to
 understand them (see also example in class userlib/include/HGCSSSimHit.hh).
 
-## Setup the environment (lxplus SLC7)
+## Setup the environment (lxplus el9)
 
 ```
 git clone git@github.com:pfs/PFCal.git
 cd PFCal/PFCalEE
-source g4env.sh
+source g4env_el9.sh
 ```
 
 ## Compile

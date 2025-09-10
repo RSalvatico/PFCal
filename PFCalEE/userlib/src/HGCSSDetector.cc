@@ -11,7 +11,7 @@ HGCSSDetector & theDetector(){
 
 void HGCSSDetector::buildDetector(const unsigned versionNumber,
 				  const unsigned model,
-				  bool concept,
+				  bool isConcept,
 				  bool isCaliceHcal,
 				  bool bypassR){
   

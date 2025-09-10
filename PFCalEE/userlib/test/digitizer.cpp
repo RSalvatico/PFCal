@@ -428,7 +428,7 @@ int main(int argc, char** argv){//main
   //// Hardcoded config ////////////////////////////////////
   //////////////////////////////////////////////////////////
   //for HGCAL, true means only 12 FHCAL layers considered (24 are simulated)
-  bool concept = true;
+  bool isConcept = true;
 
   // choose a jet definition
   double R = 0.5;
@@ -571,7 +571,7 @@ int main(int argc, char** argv){//main
 
   bool bypassR = false;
   if (isTBsetup) bypassR = true;
-  myDetector.buildDetector(versionNumber,model,concept,isCaliceHcal,bypassR);
+  myDetector.buildDetector(versionNumber,model,isConcept,isCaliceHcal,bypassR);
 
   //initialise calibration class
   HGCSSCalibration mycalib(inFilePath,bypassR,nSiLayers);

@@ -16,8 +16,10 @@ set(HepMC_FOUND 1)
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 if(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
+  find_package(ROOT REQUIRED)
 else()
   find_package(Geant4 REQUIRED)
+  find_package(ROOT REQUIRED)
 endif()
 
 #find_package(HepMC REQUIRED)
@@ -51,7 +53,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(PFCalEE PFCalEE.cc ${sources} ${headers})
-target_link_libraries(PFCalEE ${Geant4_LIBRARIES} ${HepMC_DIR}/lib/libHepMCfio.so ${HepMC_DIR}/lib/libHepMC.so ${PROJECT_SOURCE_DIR}/userlib/lib/libPFCalEEuserlib.so)
+target_link_libraries(PFCalEE ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${HepMC_DIR}/lib/libHepMCfio.so ${HepMC_DIR}/lib/libHepMC.so ${PROJECT_SOURCE_DIR}/userlib/lib/libPFCalEEuserlib.so)
 #target_link_libraries(PFCalEE ${Geant4_LIBRARIES} ${PROJECT_SOURCE_DIR}/userlib/lib/libPFCalEEuserlib.so)
 
 #add_executable(TestMaterial TestMaterial.cc ${sources} ${headers})

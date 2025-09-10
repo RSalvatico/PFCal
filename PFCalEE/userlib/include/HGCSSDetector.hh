@@ -1345,7 +1345,7 @@ public:
 
   void buildDetector(const unsigned versionNumber,
 		     const unsigned model=2,
-		     bool concept=true,
+		     bool isConcept=true,
 		     bool isCaliceHcal=false,
 		     bool bypassR=false);
 

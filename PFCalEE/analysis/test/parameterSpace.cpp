@@ -27,7 +27,7 @@ double getX0(std::string element){
   else if (element == "Pb") return 5.61253;
   else if (element == "W") return 3.50418;
   else if (element == "Air") return 303921;
-  else if (element == "PCB") return 187.31;
+  else if (element == "PCB") return 175.0;
   else if (element == "Si") return 93.6607;
   //  else if (element == "") return ;
   else {
@@ -42,7 +42,7 @@ double getL0(std::string element){
   else if (element == "Pb") return 175.9;
   else if (element == "W") return 99.46;
   else if (element == "Air") return 747749;
-  else if (element == "PCB") return 700;
+  else if (element == "PCB") return 526.4;
   else if (element == "Si") return 465.2;
   //  else if (element == "") return ;
   else {

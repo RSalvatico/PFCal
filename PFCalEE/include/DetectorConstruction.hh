@@ -104,7 +104,8 @@ public:
     v_HGCAL_2022TB_9_05=130,
     v_HGCAL_2022TB_9_2=131,
     v_HGCAL_2022TB_9_5=132,
-    v_testCu=200
+    v_testCu=200,
+    v_HGCAL_2025TB_1_1=140
   };
 
   enum DetectorModel {

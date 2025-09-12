@@ -245,7 +245,7 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         G4double modAirThick2(0.3*mm);
         G4double modWCuThick(1.4*mm); //add gold?
 
-        //FLY PATH between absorber and colling plate
+        //FLY PATH between absorber and cooling plate
         flypathAirThick -= modPCBThick+modAirThick1+3*modSiThick+modAirThick2;
         lThick.push_back(flypathAirThick);   lEle.push_back("Air");
 
@@ -267,6 +267,77 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 	break;
       }//TB setup
 
+
+    case v_HGCAL_2025TB_1_1:
+    {
+    G4cout << "[DetectorConstruction] starting v_HGCAL for 2025 testbeam"<< G4endl;
+
+    std::vector<G4double> lThick;
+	  std::vector<G4double> lThickR;
+    std::vector<G4double> lThickL;
+	  std::vector<std::string> lEle;
+    std::vector<std::string> lEleR;
+    std::vector<std::string> lEleL;
+
+        //ABSORBER + AIR VOLUME
+        G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(7.0*cm);
+        G4int nplates(1);
+        if(v_HGCAL_2025TB_1_1) nplates=10;
+
+        G4cout << " Nplates=" << nplates << " air=" << flypathAirThick << G4endl;
+        for(int iplate=0; iplate<nplates; iplate++) {
+          lThick.push_back(absFeThick);  lEle.push_back("Fe");
+          lThick.push_back(absPbThick);  lEle.push_back("Pb");
+          lThick.push_back(absFeThick);  lEle.push_back("Fe");
+          if(iplate==nplates-1) continue;
+          lThick.push_back(absAirGap);   lEle.push_back("Air");
+        }
+          
+        //MODULE - COOLING PLATE
+
+        //module
+        G4double modPCBThick(1.3*mm);
+        G4double modAirThick1(0.125*mm); //Replace air with epoxy
+        G4double modSiThick(0.1*mm); //x3 below
+        G4double modAirThick2(0.3*mm); //Replace air with kapton
+        G4double modWCuThick(1.4*mm);
+
+        //FLY PATH **between absorber and end of first active module**
+        flypathAirThick -= modPCBThick+modAirThick1+3*modSiThick+modAirThick2;
+        lThickR.push_back(flypathAirThick);   lEleR.push_back("Air");
+
+        //Right side (incoming beam)
+        lThickR.push_back(modPCBThick);   lEleR.push_back("PCB");
+        lThickR.push_back(modAirThick1);  lEleR.push_back("Air"); //Should be epoxy
+        for(int j=0; j<3; j++){
+          lThickR.push_back(modSiThick);  lEleR.push_back("Si");
+        }
+        lThickR.push_back(modAirThick2);  lEleR.push_back("Air"); //Should be kapton
+        lThickR.push_back(modWCuThick);   lEleR.push_back("WCu");
+
+        //cooling plate
+        G4double coolingCuThick(6.05*mm);
+        lThickR.push_back(coolingCuThick);   lEleR.push_back("Cu");
+
+        //Left side (after cooling plate)
+        lThickL.push_back(modWCuThick);   lEleL.push_back("WCu");
+        lThickL.push_back(modAirThick2);  lEleL.push_back("Air"); //Should be kapton
+        for(int j=0; j<3; j++){
+          lThickL.push_back(modSiThick);  lEleL.push_back("Si");
+        }
+        lThickL.push_back(modAirThick1);  lEleL.push_back("Air"); //Should be epoxy
+        lThickL.push_back(modPCBThick);   lEleL.push_back("PCB");
+
+        //composite structure
+        if(v_HGCAL_2025TB_1_1) {
+          m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+          for (layer=0; layer<6; layer++){
+            m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
+            m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
+          }
+        }
+	break;
+    }
 
     case v_HGCAL_2016TB:
       {

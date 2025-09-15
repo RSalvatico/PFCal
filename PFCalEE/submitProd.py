@@ -227,8 +227,10 @@ bval = 'BON' if opt.Bfield>0 else 'BOFF'
 lab = '200u'
 odir = '{}/git{}/version_{}/model_{}/{}/{}/{}'.format(opt.out,opt.gittag,opt.version,opt.model,opt.datatype,bval,lab)
 if opt.phi != 0.5: odir='{out}/phi_{n:.{r}f}pi'.format(out=odir,n=opt.phi,r=3)
-eos_partial = opt.eos[1:] if os.path.isabs(opt.eos) else opt.eos
-edir = os.path.join('/eos', 'cms', eos_partial, 'git' + opt.gittag, opt.datatype)
+#eos_partial = opt.eos[1:] if os.path.isabs(opt.eos) else opt.eos
+eos_partial = opt.eos # FIXME
+#edir = os.path.join('/eos', 'cms', eos_partial, 'git' + opt.gittag, opt.datatype)
+edir = os.path.join(eos_partial, 'git' + opt.gittag, opt.datatype) # FIXME
 
 subprod = SubmitProd(outDir=odir, eosDirOut=edir, bfield=bval, params=opt)
 subprod.write_shell_script_file()

@@ -283,6 +283,7 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(7.0*cm);
         G4int nplates(1);
         if(v_HGCAL_2025TB_1_1) nplates=10;
+        else if(v_HGCAL_2025TB_2_1) nplates=3;
 
         G4cout << " Nplates=" << nplates << " air=" << flypathAirThick << G4endl;
         for(int iplate=0; iplate<nplates; iplate++) {
@@ -308,11 +309,11 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 
         //Right side (incoming beam)
         lThickR.push_back(modPCBThick);   lEleR.push_back("PCB");
-        lThickR.push_back(modAirThick1);  lEleR.push_back("Epoxy"); //Should be epoxy
+        lThickR.push_back(modAirThick1);  lEleR.push_back("Epoxy"); //Should be Epoxy
         for(int j=0; j<3; j++){
           lThickR.push_back(modSiThick);  lEleR.push_back("Si");
         }
-        lThickR.push_back(modAirThick2);  lEleR.push_back("Kapton"); //Should be kapton
+        lThickR.push_back(modAirThick2);  lEleR.push_back("Kapton"); //Should be Kapton
         lThickR.push_back(modWCuThick);   lEleR.push_back("WCu");
 
         //cooling plate
@@ -321,26 +322,45 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 
         //Left side (after cooling plate)
         lThickL.push_back(modWCuThick);   lEleL.push_back("WCu");
-        lThickL.push_back(modAirThick2);  lEleL.push_back("Kapton"); //Should be kapton
+        lThickL.push_back(modAirThick2);  lEleL.push_back("Kapton"); //Should be Kapton
         for(int j=0; j<3; j++){
           lThickL.push_back(modSiThick);  lEleL.push_back("Si");
         }
-        lThickL.push_back(modAirThick1);  lEleL.push_back("Epoxy"); //Should be epoxy
+        lThickL.push_back(modAirThick1);  lEleL.push_back("Epoxy"); //Should be Epoxy
         lThickL.push_back(modPCBThick);   lEleL.push_back("PCB");
 
         //composite structure
-        if(v_HGCAL_2025TB_1_1) {
+        if(v_HGCAL_2025TB_1_1) { // Shower maximum sampling
           m_caloStruct.push_back( SamplingSection(lThick,lEle) );
           for(int layer=0; layer<6; layer++){
             m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
             m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
           }
         }
-        //else if (v_HGCAL_2025TB_2_1) {
-        //  for(int layer=0; layer<6; layer++){
-        //    
-        //  }
-        //}
+        else if (v_HGCAL_2025TB_2_1) { // Uniform sampling (absorber in front of Si sensors alternated uniformly 3:1)
+          for(int layer=0; layer<6; layer++){
+            m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+            m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
+            m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
+          }
+        }
+        else if (v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
+
+          for(int layer =0; layer<3; layer++){
+            int nabsorber = 2; 
+
+            for(int repetition=0; repetition<2; repetition++){
+
+              for(int abslayer=0; abslayer<nabsorber; abslayer++){
+                m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+              }
+
+              m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
+              m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );         
+            }
+            nabsorber++;
+          }
+        }
 	break;
     }
 

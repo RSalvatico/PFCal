@@ -196,7 +196,7 @@ class SubmitProd(SubmitBase):
             s.write( ('Arguments = --energy {} --eta {} --run {} --granularity {}\n'
                       .format(self.en_tag, self.eta_tag, self.run_tag, self.gran_tag)) )
             #s.write('Requirements = (OpSysAndVer =?= "CentOS7")\n')
-            s.write('MY.WantOS = "el7"\n')
+            s.write('MY.WantOS = "el9"\n')
 
             t = ( ('prefix', 'prod'), ('en', self.en_tag), ('eta', self.eta_tag),
                   ('run', self.run_tag) )

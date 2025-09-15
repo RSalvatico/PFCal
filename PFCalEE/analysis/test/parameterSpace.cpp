@@ -29,6 +29,8 @@ double getX0(std::string element){
   else if (element == "Air") return 303921;
   else if (element == "PCB") return 175.0;
   else if (element == "Si") return 93.6607;
+  else if (element == "Epoxy") return 315.9;
+  else if (element == "Kapton") return 143.1;
   //  else if (element == "") return ;
   else {
     std::cerr << "Element not known, please add !" << std::endl;
@@ -44,6 +46,8 @@ double getL0(std::string element){
   else if (element == "Air") return 747749;
   else if (element == "PCB") return 526.4;
   else if (element == "Si") return 465.2;
+  else if (element == "Epoxy") return 617.1;
+  else if (element == "Kapton") return 567.4;
   //  else if (element == "") return ;
   else {
     std::cerr << "Element not known, please add !" << std::endl;

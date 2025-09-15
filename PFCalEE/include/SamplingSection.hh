@@ -106,6 +106,8 @@ public:
     else if (isAbsorberElement(aEle)) return G4Colour::Gray();
     else if (ele_name[aEle] == "PCB") return G4Colour::Blue();
     else if (ele_name[aEle] == "Air") return G4Colour::Cyan();
+    else if (ele_name[aEle] == "Epoxy") return G4Colour::Green();
+    else if (ele_name[aEle] == "Kapton") return G4Colour::Brown();
     return G4Colour::Yellow();
   };
 
@@ -117,7 +119,8 @@ public:
 	 ele_name[aEle] == "W" || ele_name[aEle] == "Brass" ||
 	 ele_name[aEle] == "Fe" || ele_name[aEle] == "Steel" || 
 	 ele_name[aEle] == "SSteel" || ele_name[aEle] == "Al" ||
-	 ele_name[aEle] == "WCu" || ele_name[aEle] == "NeutMod"
+	 ele_name[aEle] == "WCu" || ele_name[aEle] == "NeutMod" ||
+   ele_name[aEle] == "Epoxy" || ele_name[aEle] == "Kapton"
 	 )
 	) return true;
     return false;

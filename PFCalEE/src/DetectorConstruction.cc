@@ -268,7 +268,7 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
       }//TB setup
 
 
-    case v_HGCAL_2025TB_1_1:
+    case v_HGCAL_2025TB_1_1:    case v_HGCAL_2025TB_2_1:    case v_HGCAL_2025TB_3_1:
     {
     G4cout << "[DetectorConstruction] starting v_HGCAL for 2025 testbeam"<< G4endl;
 
@@ -308,11 +308,11 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 
         //Right side (incoming beam)
         lThickR.push_back(modPCBThick);   lEleR.push_back("PCB");
-        lThickR.push_back(modAirThick1);  lEleR.push_back("Air"); //Should be epoxy
+        lThickR.push_back(modAirThick1);  lEleR.push_back("Epoxy"); //Should be epoxy
         for(int j=0; j<3; j++){
           lThickR.push_back(modSiThick);  lEleR.push_back("Si");
         }
-        lThickR.push_back(modAirThick2);  lEleR.push_back("Air"); //Should be kapton
+        lThickR.push_back(modAirThick2);  lEleR.push_back("Kapton"); //Should be kapton
         lThickR.push_back(modWCuThick);   lEleR.push_back("WCu");
 
         //cooling plate
@@ -321,21 +321,26 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 
         //Left side (after cooling plate)
         lThickL.push_back(modWCuThick);   lEleL.push_back("WCu");
-        lThickL.push_back(modAirThick2);  lEleL.push_back("Air"); //Should be kapton
+        lThickL.push_back(modAirThick2);  lEleL.push_back("Kapton"); //Should be kapton
         for(int j=0; j<3; j++){
           lThickL.push_back(modSiThick);  lEleL.push_back("Si");
         }
-        lThickL.push_back(modAirThick1);  lEleL.push_back("Air"); //Should be epoxy
+        lThickL.push_back(modAirThick1);  lEleL.push_back("Epoxy"); //Should be epoxy
         lThickL.push_back(modPCBThick);   lEleL.push_back("PCB");
 
         //composite structure
         if(v_HGCAL_2025TB_1_1) {
           m_caloStruct.push_back( SamplingSection(lThick,lEle) );
-          for (layer=0; layer<6; layer++){
+          for(int layer=0; layer<6; layer++){
             m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
             m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
           }
         }
+        //else if (v_HGCAL_2025TB_2_1) {
+        //  for(int layer=0; layer<6; layer++){
+        //    
+        //  }
+        //}
 	break;
     }
 
@@ -1775,6 +1780,7 @@ void DetectorConstruction::DefineMaterials()
   m_dEdx["Ni"] = 1.307;
   m_materials["O"] = nistManager->FindOrBuildMaterial("G4_O",false);
   m_materials["Br"] = nistManager->FindOrBuildMaterial("G4_Br",false);
+  m_materials["N"] = nistManager->FindOrBuildMaterial("G4_N",false);
 
   /*m_materials["PCB"] = new G4Material("G10",1.700*g/cm3,4);
   m_materials["PCB"]->AddElement(nistManager->FindOrBuildElement(14), 1);
@@ -1924,6 +1930,19 @@ void DetectorConstruction::DefineMaterials()
   m_materials["NeutMod"]->AddMaterial(m_materials["H"]  , 0.14372);
   m_dEdx["NeutMod"] = 1.749*0.86*0.950/10.;
 
+  m_materials["Kapton"]= new G4Material("Kapton",1.42*g/cm3,4);
+  m_materials["Kapton"]->AddMaterial(m_materials["C"]  , 0.6911);
+  m_materials["Kapton"]->AddMaterial(m_materials["H"]  , 0.0264);
+  m_materials["Kapton"]->AddMaterial(m_materials["O"]  , 0.2092);
+  m_materials["Kapton"]->AddMaterial(m_materials["N"]  , 0.0733);
+  m_dEdx["Kapton"] = 2.947/10.;
+
+  m_materials["Epoxy"]= new G4Material("Epoxy",1.20*g/cm3,3);
+  m_materials["Epoxy"]->AddMaterial(m_materials["C"]  , 0.782);
+  m_materials["Epoxy"]->AddMaterial(m_materials["H"]  , 0.069);
+  m_materials["Epoxy"]->AddMaterial(m_materials["O"]  , 0.149);
+  m_dEdx["Epoxy"] = 2.688/10.;
+
 
   G4cout << m_materials["PCB"] << G4endl;
   G4cout << m_materials["Scintillator"] << G4endl;
@@ -1933,6 +1952,8 @@ void DetectorConstruction::DefineMaterials()
   G4cout << m_materials["WCu"] << G4endl;
   G4cout << m_materials["Cu"] << G4endl;
   G4cout << m_materials["SSteel"] << G4endl;
+  G4cout << m_materials["Epoxy"] << G4endl;
+  G4cout << m_materials["Kapton"] << G4endl;
 }
 
 //

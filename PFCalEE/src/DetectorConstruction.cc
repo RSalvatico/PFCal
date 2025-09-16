@@ -282,7 +282,7 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
     std::vector<std::string> lEleAir;
 
         //ABSORBER + AIR VOLUME
-        G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(7.0*cm);
+        G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(1.3425*cm);
         G4int nplates(1);
         if(version_ == v_HGCAL_2025TB_1_1) nplates=10;
         else if(version_ == v_HGCAL_2025TB_2_1) nplates=3;
@@ -308,7 +308,8 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         
 
         //FLY PATH **between absorber and end of first active module**
-        flypathAirThick -= modPCBThick+modEpoxyThick+3*modSiThick+modKaptonThick;
+        flypathAirThick -= modPCBThick+modEpoxyThick+3*modSiThick+modKaptonThick+modWCuThick;
+        G4cout << "flyPathAirThick="<< flypathAirThick << G4endl;
         lThickR.push_back(flypathAirThick);   lEleR.push_back("Air");
 
         //Right side (incoming beam)

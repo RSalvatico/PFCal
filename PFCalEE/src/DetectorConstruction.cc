@@ -282,8 +282,8 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         //ABSORBER + AIR VOLUME
         G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(7.0*cm);
         G4int nplates(1);
-        if(v_HGCAL_2025TB_1_1) nplates=10;
-        else if(v_HGCAL_2025TB_2_1) nplates=3;
+        if(version_ == v_HGCAL_2025TB_1_1) nplates=10;
+        else if(version_ == v_HGCAL_2025TB_2_1) nplates=3;
 
         G4cout << " Nplates=" << nplates << " air=" << flypathAirThick << G4endl;
         for(int iplate=0; iplate<nplates; iplate++) {
@@ -330,21 +330,21 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         lThickL.push_back(modPCBThick);   lEleL.push_back("PCB");
 
         //composite structure
-        if(v_HGCAL_2025TB_1_1) { // Shower maximum sampling
+        if(version_ == v_HGCAL_2025TB_1_1) { // Shower maximum sampling
           m_caloStruct.push_back( SamplingSection(lThick,lEle) );
           for(int layer=0; layer<6; layer++){
             m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
             m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
           }
         }
-        else if (v_HGCAL_2025TB_2_1) { // Uniform sampling (absorber in front of Si sensors alternated uniformly 3:1)
+        else if (version_ == v_HGCAL_2025TB_2_1) { // Uniform sampling (absorber in front of Si sensors alternated uniformly 3:1)
           for(int layer=0; layer<6; layer++){
             m_caloStruct.push_back( SamplingSection(lThick,lEle) );
             m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
             m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
           }
         }
-        else if (v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
+        else if (version_ == v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
 
           for(int layer =0; layer<3; layer++){
             int nabsorber = 2; 

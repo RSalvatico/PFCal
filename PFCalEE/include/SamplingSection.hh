@@ -130,6 +130,7 @@ public:
   inline void resetCounters()
   {
     ele_den.resize(n_elements,0);
+    //std::cout << "ele_den size n_elements = " << n_elements << std::endl;
     ele_dl.resize(n_elements,0);
     for (unsigned idx(0); idx<n_elements; ++idx){
       ele_den[idx] = 0;

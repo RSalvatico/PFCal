@@ -282,16 +282,16 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
     std::vector<std::string> lEleAir;
 
         //ABSORBER + AIR VOLUME
-        G4double absFeThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(1.3425*cm);
+        G4double absSSteelThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(1.3425*cm);
         G4int nplates(1);
         if(version_ == v_HGCAL_2025TB_1_1) nplates=10;
         else if(version_ == v_HGCAL_2025TB_2_1) nplates=3;
 
         G4cout << " Nplates=" << nplates << " air=" << flypathAirThick << G4endl;
         for(int iplate=0; iplate<nplates; iplate++) {
-          lThick.push_back(absFeThick);  lEle.push_back("Fe");
+          lThick.push_back(absSSteelThick);  lEle.push_back("SSteel");
           lThick.push_back(absPbThick);  lEle.push_back("Pb");
-          lThick.push_back(absFeThick);  lEle.push_back("Fe");
+          lThick.push_back(absSSteelThick);  lEle.push_back("SSteel");
           if(iplate==nplates-1) continue;
           lThick.push_back(absAirGap);   lEle.push_back("Air");
         }
@@ -355,7 +355,7 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         }
         else if (version_ == v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
 
-          for(int layer =0; layer<3; layer++){
+          for(int layer=0; layer<3; layer++){
             int nabsorber = 2; 
 
             for(int repetition=0; repetition<2; repetition++){
@@ -372,6 +372,26 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
           }
         }
 	break;
+    }
+
+    case v_HGCAL_100mPb:
+    {
+       G4cout << "[DetectorConstruction] starting 50 m of lead"<< G4endl;
+
+    std::vector<G4double> lThick;
+    std::vector<G4double> lThick1;
+	  
+	  std::vector<std::string> lEle;
+    std::vector<std::string> lEle1;
+
+
+        //ABSORBER + AIR VOLUME
+        G4double absPbThick(50*mm);
+        lThick.push_back(absPbThick);  lEle.push_back("Pb");
+        //m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+        lThick.push_back(absPbThick);  lEle.push_back("Pb");
+        m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+        break;
     }
 
     case v_HGCAL_2016TB:
@@ -2182,6 +2202,7 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
 
   for(size_t i=0; i<m_caloStruct.size(); i++)
     {
+      std::cout << "m_caloStructSize " << m_caloStruct.size() << std::endl;
       G4double crackOffset = getCrackOffset(i);
       G4double angOffset = getAngOffset(i);
 
@@ -2197,18 +2218,20 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
 	if (i==firstScintlayer_) zOverburden = zOverburdenRef;
       }
       const unsigned nEle = m_caloStruct[i].n_elements;
+      std::cout << "nEle " << nEle << std::endl; 
       //index for counting Si sensitive layers
       unsigned idx = 0;
       double totalThicknessLayer = 0;
       for (unsigned ie(0); ie<nEle;++ie){
 	std::string eleName = m_caloStruct[i].ele_name[ie];
-	if (m_nSectors==1) sprintf(nameBuf,"%s%d",eleName.c_str(),int(i+1));
-	else sprintf(nameBuf,"%s%d_%d",eleName.c_str(),int(sectorNum),int(i+1));
+	if (m_nSectors==1) sprintf(nameBuf,"%s%d",eleName.c_str(),int(ie+1));
+	else sprintf(nameBuf,"%s%d_%d",eleName.c_str(),int(sectorNum),int(ie));
 	if (eleName=="Si") {
 	  if (m_nSectors==1) sprintf(nameBuf,"Si%d_%d",int(i+1),idx);
-	  else sprintf(nameBuf,"Si%d_%d_%d",int(sectorNum),int(i+1),idx);
+	  else sprintf(nameBuf,"Si%d_%d_%d",int(sectorNum),int(ie),idx);
 	  idx++;
 	}
+  //std::cout <<"nameBuf " << nameBuf << " eleName " << eleName << " sectorNum " << int(sectorNum) << " int(i+1) " << int(i+1) << std::endl;
 	std::string baseName(nameBuf);
 	G4double thick = m_caloStruct[i].ele_thick[ie];
 	totalThicknessLayer += thick;
@@ -2273,7 +2296,7 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
 #endif
 	  m_caloStruct[i].ele_vol[nEle*sectorNum+ie]=
 	    new G4PVPlacement(0, G4ThreeVector(xpvpos,0.,zOffset+zOverburden+thick/2), logi, baseName+"phys", m_logicWorld, (eleName=="CuExtra")?true:false, 0);
-	  //std::cout << " **** positionning layer " <<  m_caloStruct[i].ele_vol[nEle*sectorNum+ie]->GetName() << " at " << xpvpos << " 0 " << zOffset+zOverburden+thick/2 << std::endl;
+	  std::cout << " **** positionning layer " <<  m_caloStruct[i].ele_vol[nEle*sectorNum+ie]->GetName() << " at " << xpvpos << " 0 " << zOffset+zOverburden+thick/2 << std::endl;
 
 	  G4VisAttributes *simpleBoxVisAtt= new G4VisAttributes(m_caloStruct[i].g4Colour(ie));
 	  simpleBoxVisAtt->SetVisibility(true);

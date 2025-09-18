@@ -47,6 +47,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   }
 
   G4double edep = aStep->GetTotalEnergyDeposit();
+  //std::cout << " SteppingAction::UserSteppingAction: edep = " << edep << " in volume " << volume->GetName() << std::endl;
 
   //correct with Birk's law for scintillator material
   if (volume->GetName().find("Scint")!=volume->GetName().npos) {

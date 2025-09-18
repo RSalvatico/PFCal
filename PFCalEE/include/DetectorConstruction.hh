@@ -107,7 +107,8 @@ public:
     v_testCu=200,
     v_HGCAL_2025TB_1_1=140,
     v_HGCAL_2025TB_2_1=141,
-    v_HGCAL_2025TB_3_1=142
+    v_HGCAL_2025TB_3_1=142,
+    v_HGCAL_100mPb=150
   };
 
   enum DetectorModel {

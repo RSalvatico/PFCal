@@ -149,7 +149,7 @@ void EventAction::EndOfEventAction(const G4Event* g4evt)
       lSec.absorberE((*detector_)[i].getAbsorbedEnergy());
       lSec.measuredE((*detector_)[i].getMeasuredEnergy(false));
       lSec.totalE((*detector_)[i].getTotalEnergy());
-      std::cout << "total E in section " << i << " = " << lSec.totalE() << std::endl;
+      //std::cout << "total E in section " << i << " = " << lSec.totalE() << std::endl;
       lSec.gFrac((*detector_)[i].getPhotonFraction());
       lSec.eFrac((*detector_)[i].getElectronFraction());
       lSec.muFrac((*detector_)[i].getMuonFraction());
@@ -208,6 +208,7 @@ void EventAction::EndOfEventAction(const G4Event* g4evt)
       }
       //if (i==0) G4cout << " ** evt " << evt->GetEventID() << G4endl;
       (*detector_)[i].resetCounters();
+      std::cout << " detector " << i << " resetCounters done " << std::endl;
 
     }
   if(debug){

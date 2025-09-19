@@ -11,10 +11,12 @@ void SamplingSection::add(G4double den, G4double dl,
 			  G4int layerId)
 {
   std::string lstr = vol->GetName();
+  //ele_den.clear();
+  //ele_dl.clear(); 
   for (unsigned ie(0); ie<n_elements*n_sectors;++ie){
     //std::cout << "n_elements, n_sectors = " << n_elements << " " << n_sectors << std::endl;
     if(ele_vol[ie] && lstr==ele_vol[ie]->GetName()){ 
-      std::cout <<"ie " << ie << " ele_vol[ie] " << ele_vol[ie] << " lstr " << lstr << " GetName " << ele_vol[ie]->GetName() << std::endl;
+      //std::cout <<"ie " << ie << " ele_vol[ie] " << ele_vol[ie] << " lstr " << lstr << " GetName " << ele_vol[ie]->GetName() << std::endl;
       unsigned eleidx = ie%n_elements;
       ele_den[eleidx]+=den;
       ele_dl[eleidx]+=dl; 
@@ -50,7 +52,10 @@ void SamplingSection::add(G4double den, G4double dl,
     }//if in right material
     
   }//loop on available materials
-  //std::cout << "whereisden: " << den << std::endl;
+
+  //ele_den.clear();
+  //ele_dl.clear(); 
+  //std::cout << "ele_den " << ele_den.size() << std::endl;
   
   //support cone
   char nameBuf[100];
@@ -220,12 +225,12 @@ G4double SamplingSection::getAbsorbedEnergy()
 G4double SamplingSection::getTotalEnergy()
 {
  double val=0;  
- std::cout << " n_elements = " << n_elements << std::endl;
+ //std::cout << " n_elements = " << n_elements << std::endl;
   for (unsigned ie(0); ie<n_elements;++ie){
     std::cout << " ele " << ie << " " << ele_name[ie] << " " << ele_den[ie] << std::endl;
     val += ele_den[ie];
   }
-  std::cout << " total energy = " << val << std::endl;
+  //std::cout << " total energy = " << val << std::endl;
   return val;
 }
 

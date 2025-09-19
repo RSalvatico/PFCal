@@ -136,6 +136,7 @@ public:
       ele_den[idx] = 0;
       ele_dl[idx] = 0;
     }
+    std::cout << "letmesee " << ele_den[0] << std::endl;
     sens_time.resize(n_sens_elements,0);
     sens_gFlux.resize(n_sens_elements,0);
     sens_eFlux.resize(n_sens_elements,0);

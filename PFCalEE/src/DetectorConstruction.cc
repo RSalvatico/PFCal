@@ -387,10 +387,17 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 
         //ABSORBER + AIR VOLUME
         G4double absPbThick(50*mm);
+        G4double absPb1Thick(100*m);
+        G4double absSiThick(50*mm);
         lThick.push_back(absPbThick);  lEle.push_back("Pb");
         //m_caloStruct.push_back( SamplingSection(lThick,lEle) );
-        lThick.push_back(absPbThick);  lEle.push_back("Pb");
+        lThick.push_back(absSiThick);  lEle.push_back("Si");
+        lThick.push_back(absPb1Thick);  lEle.push_back("Pb");
+        lThick1.push_back(absPbThick);  lEle1.push_back("Pb");
+        lThick1.push_back(absPbThick);  lEle1.push_back("Fe");
+        //lThick1.push_back(absPbThick);  lEle1.push_back("Pb");
         m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+        m_caloStruct.push_back( SamplingSection(lThick1,lEle1) );
         break;
     }
 
@@ -2200,6 +2207,7 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
   G4double totalLengthX0 = 0;
   G4double totalLengthL0 = 0;
 
+  size_t layer_index = 0;
   for(size_t i=0; i<m_caloStruct.size(); i++)
     {
       std::cout << "m_caloStructSize " << m_caloStruct.size() << std::endl;
@@ -2218,17 +2226,19 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
 	if (i==firstScintlayer_) zOverburden = zOverburdenRef;
       }
       const unsigned nEle = m_caloStruct[i].n_elements;
-      std::cout << "nEle " << nEle << std::endl; 
+      //std::cout << "nEle " << nEle << std::endl; 
       //index for counting Si sensitive layers
       unsigned idx = 0;
+      
       double totalThicknessLayer = 0;
       for (unsigned ie(0); ie<nEle;++ie){
 	std::string eleName = m_caloStruct[i].ele_name[ie];
-	if (m_nSectors==1) sprintf(nameBuf,"%s%d",eleName.c_str(),int(ie+1));
-	else sprintf(nameBuf,"%s%d_%d",eleName.c_str(),int(sectorNum),int(ie));
+	if (m_nSectors==1) sprintf(nameBuf,"%s%d",eleName.c_str(),int(layer_index)); //ie
+	else sprintf(nameBuf,"%s%d_%d",eleName.c_str(),int(sectorNum),int(i+1)); //ie
+  layer_index++;
 	if (eleName=="Si") {
 	  if (m_nSectors==1) sprintf(nameBuf,"Si%d_%d",int(i+1),idx);
-	  else sprintf(nameBuf,"Si%d_%d_%d",int(sectorNum),int(ie),idx);
+	  else sprintf(nameBuf,"Si%d_%d_%d",int(sectorNum),int(i+1),idx); //ie
 	  idx++;
 	}
   //std::cout <<"nameBuf " << nameBuf << " eleName " << eleName << " sectorNum " << int(sectorNum) << " int(i+1) " << int(i+1) << std::endl;

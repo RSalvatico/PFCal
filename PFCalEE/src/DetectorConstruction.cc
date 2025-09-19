@@ -2210,7 +2210,7 @@ void DetectorConstruction::buildSectorStack(const unsigned sectorNum,
   size_t layer_index = 0;
   for(size_t i=0; i<m_caloStruct.size(); i++)
     {
-      std::cout << "m_caloStructSize " << m_caloStruct.size() << std::endl;
+      //std::cout << "m_caloStructSize " << m_caloStruct.size() << std::endl;
       G4double crackOffset = getCrackOffset(i);
       G4double angOffset = getAngOffset(i);
 

@@ -208,7 +208,6 @@ void EventAction::EndOfEventAction(const G4Event* g4evt)
       }
       //if (i==0) G4cout << " ** evt " << evt->GetEventID() << G4endl;
       (*detector_)[i].resetCounters();
-      std::cout << " detector " << i << " resetCounters done " << std::endl;
 
     }
   if(debug){

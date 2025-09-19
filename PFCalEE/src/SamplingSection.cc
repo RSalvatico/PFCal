@@ -227,7 +227,7 @@ G4double SamplingSection::getTotalEnergy()
  double val=0;  
  //std::cout << " n_elements = " << n_elements << std::endl;
   for (unsigned ie(0); ie<n_elements;++ie){
-    std::cout << " ele " << ie << " " << ele_name[ie] << " " << ele_den[ie] << std::endl;
+    //std::cout << " ele " << ie << " " << ele_name[ie] << " " << ele_den[ie] << std::endl;
     val += ele_den[ie];
   }
   //std::cout << " total energy = " << val << std::endl;

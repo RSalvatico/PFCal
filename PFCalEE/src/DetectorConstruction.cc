@@ -267,22 +267,29 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 	break;
       }//TB setup
 
-
-    case v_HGCAL_2025TB_1_1:    case v_HGCAL_2025TB_2_1:    case v_HGCAL_2025TB_3_1:
+      
+      case v_HGCAL_2025TB_1_1:    case v_HGCAL_2025TB_2_1:    case v_HGCAL_2025TB_3_1:
     {
     G4cout << "[DetectorConstruction] starting v_HGCAL for 2025 testbeam"<< G4endl;
 
     std::vector<G4double> lThick;
-	  std::vector<G4double> lThickR;
-    std::vector<G4double> lThickL;
-    std::vector<G4double> lThickAir;
+	  std::vector<G4double> lThickCu;
+    std::vector<G4double> lThickAir1;
+    std::vector<G4double> lThickAir2;
+    std::vector<G4double> lThickPb;
+    std::vector<G4double> lThickPCB1;
+    std::vector<G4double> lThickPCB2;
 	  std::vector<std::string> lEle;
-    std::vector<std::string> lEleR;
-    std::vector<std::string> lEleL;
-    std::vector<std::string> lEleAir;
+    std::vector<std::string> lEleCu;
+    std::vector<std::string> lEleAir1;
+    std::vector<std::string> lEleAir2;
+    std::vector<std::string> lElePb;
+    std::vector<std::string> lElePCB1;
+    std::vector<std::string> lElePCB2;
+
 
         //ABSORBER + AIR VOLUME
-        G4double absSSteelThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(1.3425*cm);
+        G4double absSSteelThick(0.3*mm),absPbThick(0.49*cm),absAirGap(0.4*mm),flypathAirThick(1.3425*cm),absPb1Thick(50*m);
         G4int nplates(1);
         if(version_ == v_HGCAL_2025TB_1_1) nplates=10;
         else if(version_ == v_HGCAL_2025TB_2_1) nplates=3;
@@ -304,54 +311,63 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         G4double modSiThick(0.1*mm); //x3 below
         G4double modKaptonThick(0.3*mm); //Replace air with kapton
         G4double modWCuThick(1.4*mm);
-        G4double modAirThick(10.*mm);
+        G4double modAirThick(20.*mm);
         
 
         //FLY PATH **between absorber and end of first active module**
         flypathAirThick -= modPCBThick+modEpoxyThick+3*modSiThick+modKaptonThick+modWCuThick;
-        G4cout << "flyPathAirThick="<< flypathAirThick << G4endl;
-        lThickR.push_back(flypathAirThick);   lEleR.push_back("Air");
+        // G4cout << "flyPathAirThick="<< flypathAirThick << G4endl;
+        lThickAir1.push_back(flypathAirThick);   lEleAir1.push_back("Air");
 
         //Right side (incoming beam)
-        lThickR.push_back(modPCBThick);   lEleR.push_back("PCB");
-        lThickR.push_back(modEpoxyThick);  lEleR.push_back("Epoxy"); //Should be Epoxy
+        lThickPCB1.push_back(modPCBThick);   lElePCB1.push_back("PCB");
+        lThickPCB1.push_back(modEpoxyThick);  lElePCB1.push_back("Epoxy"); //Should be Epoxy
         for(int j=0; j<3; j++){
-          lThickR.push_back(modSiThick);  lEleR.push_back("Si");
+          lThickPCB1.push_back(modSiThick);  lElePCB1.push_back("Si");
         }
-        lThickR.push_back(modKaptonThick);  lEleR.push_back("Kapton"); //Should be Kapton
-        lThickR.push_back(modWCuThick);   lEleR.push_back("WCu");
+        lThickCu.push_back(modKaptonThick);  lEleCu.push_back("Kapton"); //Should be Kapton
+        lThickCu.push_back(modWCuThick);   lEleCu.push_back("WCu");
 
         //cooling plate
         G4double coolingCuThick(6.05*mm);
-        lThickR.push_back(coolingCuThick);   lEleR.push_back("Cu");
+        lThickCu.push_back(coolingCuThick);   lEleCu.push_back("Cu");
 
         //Left side (after cooling plate)
-        lThickL.push_back(modWCuThick);   lEleL.push_back("WCu");
-        lThickL.push_back(modKaptonThick);  lEleL.push_back("Kapton"); //Should be Kapton
+        lThickCu.push_back(modWCuThick);   lEleCu.push_back("WCu");
+        lThickCu.push_back(modKaptonThick);  lEleCu.push_back("Kapton"); //Should be Kapton
         for(int j=0; j<3; j++){
-          lThickL.push_back(modSiThick);  lEleL.push_back("Si");
+          lThickPCB2.push_back(modSiThick);  lElePCB2.push_back("Si");
         }
-        lThickL.push_back(modEpoxyThick);  lEleL.push_back("Epoxy"); //Should be Epoxy
-        lThickL.push_back(modPCBThick);   lEleL.push_back("PCB");
+        lThickPCB2.push_back(modEpoxyThick);  lElePCB2.push_back("Epoxy"); //Should be Epoxy
+        lThickPCB2.push_back(modPCBThick);   lElePCB2.push_back("PCB");
 
         //Additional air thickness after sensor (for configurations 2_1 and 3_1)
-        lThickAir.push_back(modAirThick);  lEleAir.push_back("Air");
+        lThickAir2.push_back(modAirThick);  lEleAir2.push_back("Air");
+
+        //Artificial Pb layer at the end of the structure
+        lThickPb.push_back(absPb1Thick);   lElePb.push_back("Pb");
 
         //composite structure
         if(version_ == v_HGCAL_2025TB_1_1) { // Shower maximum sampling
           m_caloStruct.push_back( SamplingSection(lThick,lEle) );
           for(int layer=0; layer<6; layer++){
-            m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
-            m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
+            m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
+            m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
+            m_caloStruct.push_back( SamplingSection(lThickCu,lEleCu) );
+            m_caloStruct.push_back( SamplingSection(lThickPCB2,lElePCB2) );
           }
+          m_caloStruct.push_back(SamplingSection(lThickPb,lElePb));
         }
         else if (version_ == v_HGCAL_2025TB_2_1) { // Uniform sampling (absorber in front of Si sensors alternated uniformly 3:1)
           for(int layer=0; layer<6; layer++){
             m_caloStruct.push_back( SamplingSection(lThick,lEle) );
-            m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
-            m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
-            if(layer!=5) m_caloStruct.push_back( SamplingSection(lThickAir,lEleAir) );
+            m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
+            m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
+            m_caloStruct.push_back( SamplingSection(lThickCu,lEleCu) );
+            m_caloStruct.push_back( SamplingSection(lThickPCB2,lElePCB2) );
+            if(layer!=5) m_caloStruct.push_back( SamplingSection(lThickAir2,lEleAir2) );
           }
+          m_caloStruct.push_back(SamplingSection(lThickPb,lElePb));
         }
         else if (version_ == v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
 
@@ -364,12 +380,15 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
                 m_caloStruct.push_back( SamplingSection(lThick,lEle) );
               }
 
-              m_caloStruct.push_back( SamplingSection(lThickR,lEleR) );
-              m_caloStruct.push_back( SamplingSection(lThickL,lEleL) );
-              if(layer!=2) m_caloStruct.push_back( SamplingSection(lThickAir,lEleAir) );
+              m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
+              m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
+              m_caloStruct.push_back( SamplingSection(lThickCu,lEleCu) );
+              m_caloStruct.push_back( SamplingSection(lThickPCB2,lElePCB2) );
+              if(layer!=2) m_caloStruct.push_back( SamplingSection(lThickAir2,lEleAir2) );
             }
             nabsorber++;
           }
+          m_caloStruct.push_back(SamplingSection(lThickPb,lElePb));
         }
 	break;
     }

@@ -371,8 +371,8 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         }
         else if (version_ == v_HGCAL_2025TB_3_1) { // Progressive sampling: 2x(2:1 X0) + 2x(3:1 X0) + 2x(4:1 X0)
 
-          for(int layer=0; layer<3; layer++){
-            int nabsorber = 2; 
+          int nabsorber = 2;
+          for(int layer=0; layer<3; layer++){ 
 
             for(int repetition=0; repetition<2; repetition++){
 

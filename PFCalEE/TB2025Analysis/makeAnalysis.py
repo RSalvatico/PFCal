@@ -73,24 +73,25 @@ def plotAbsorberE(input_files, output_dir, conversion_factor, energy, setup):
                     if i == 2:
                         absorberE.append(samplingSectionVec[i].absorberE()+samplingSectionVec[i-1].absorberE()+samplingSectionVec[i-2].absorberE())
                         layers_absorberE[active_layer_counter].append(samplingSectionVec[i].absorberE()+samplingSectionVec[i-1].absorberE()+samplingSectionVec[i-2].absorberE())
-                        measuredE.append((samplingSectionVec[i].measuredE()+samplingSectionVec[i-1].measuredE()+samplingSectionVec[i-2].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-1].voldEdx()+samplingSectionVec[i-2].voldEdx()))
-                        layers_measuredE[active_layer_counter].append( (samplingSectionVec[i].measuredE()+samplingSectionVec[i-1].measuredE()+samplingSectionVec[i-2].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-1].voldEdx()+samplingSectionVec[i-2].voldEdx()) )
+                        measuredE.append((samplingSectionVec[i].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-1].voldEdx()+samplingSectionVec[i-2].voldEdx()))
+                        layers_measuredE[active_layer_counter].append( (samplingSectionVec[i].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-1].voldEdx()+samplingSectionVec[i-2].voldEdx()) )
                         active_layer_counter += 1
                         continue
                     if i%2 == 0:
-                            if i%3 == 1:
+                            if i%6 == 4:# and not i%5 == 1:
                                 absorberE.append(samplingSectionVec[i-1].absorberE())
                                 layers_absorberE[active_layer_counter].append(samplingSectionVec[i-1].absorberE())
                                 measuredE.append((samplingSectionVec[i].measuredE()+samplingSectionVec[i-2].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i-1].voldEdx()))
                                 layers_measuredE[active_layer_counter].append( (samplingSectionVec[i].measuredE()+samplingSectionVec[i-2].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i-1].voldEdx()) )
-                            elif i%3 == 2:
+                                active_layer_counter += 1
+                            elif i%6 == 2:
                                 # Note that here, for the measuredE, one needs to consider the previous active layer, which is i-4
                                 absorberE.append(samplingSectionVec[i].absorberE()+samplingSectionVec[i-1].absorberE()+samplingSectionVec[i-2].absorberE()+samplingSectionVec[i-3].absorberE()+samplingSectionVec[i-4].absorberE())
                                 layers_absorberE[active_layer_counter].append(samplingSectionVec[i].absorberE()+samplingSectionVec[i-1].absorberE()+samplingSectionVec[i-2].absorberE()+samplingSectionVec[i-3].absorberE()+samplingSectionVec[i-4].absorberE())
                                 measuredE.append((samplingSectionVec[i].measuredE()+samplingSectionVec[i-4].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-2].voldEdx()+samplingSectionVec[i-3].voldEdx()+samplingSectionVec[i-4].voldEdx()))
                                 layers_measuredE[active_layer_counter].append( (samplingSectionVec[i].measuredE()+samplingSectionVec[i-4].measuredE()) * conversion_factor / 2.0 * (samplingSectionVec[i].voldEdx()+samplingSectionVec[i-1].voldEdx()+samplingSectionVec[i-2].voldEdx()+samplingSectionVec[i-3].voldEdx()+samplingSectionVec[i-4].voldEdx()) )
-                           
-                            active_layer_counter += 1
+                                active_layer_counter += 1
+                            
 
                 elif setup == '142':
                     if i == 2:
@@ -144,7 +145,7 @@ def plotAbsorberE(input_files, output_dir, conversion_factor, energy, setup):
 
     for layer in layers_absorberE:
         plt.figure()
-        hist_range = (0, 20000) if layer==1 else (0, 7000)
+        hist_range = (0, 120000) if layer==1 else (0, 60000)
         plt.hist(layers_absorberE[layer], bins=80, range=hist_range, histtype='step', 
              color='red', label='Absorber Energy', linewidth=2, alpha=0.8)
         plt.hist(layers_measuredE[layer], bins=80, range=hist_range, histtype='step', 
@@ -172,8 +173,8 @@ def plotAbsorberE(input_files, output_dir, conversion_factor, energy, setup):
         plt.close()
 
     plt.figure()
-    plt.hist(super_total_absorberE, bins=80, range=(0, 30000), histtype='step', color='red', label='Absorber Energy', linewidth=2, alpha=0.8)
-    plt.hist(super_total_measuredE, bins=80, range=(0, 30000), histtype='step', color='blue', label='Calculated Energy', linewidth=2, alpha=0.8)
+    plt.hist(super_total_absorberE, bins=80, range=(0, 200000), histtype='step', color='red', label='Absorber Energy', linewidth=2, alpha=0.8)
+    plt.hist(super_total_measuredE, bins=80, range=(0, 200000), histtype='step', color='blue', label='Calculated Energy', linewidth=2, alpha=0.8)
     plt.xlabel('Energy [MeV]')
     plt.ylabel('Entries')
 
@@ -207,14 +208,14 @@ def plotAbsorberE(input_files, output_dir, conversion_factor, energy, setup):
     ax1.plot(range(1, 13), total_absorberE, 'ro', label='Absorber Energy', markersize=6)
     ax1.plot(range(1, 13), total_measuredE, 'b^', label='Calculated Energy', markersize=6)
     ax1.set_ylabel('Energy [MeV]')
-    ax1.set_ylim(top=6000)
+    ax1.set_ylim(top=70000)
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     
     ax2.plot(range(1, 13), ratio, 'gs', markersize=6)
     ax2.set_xlabel('Layer Number')
     ax2.set_ylabel('Meas/Calc')
-    ax2.set_ylim(0.5, 2.5)  
+    ax2.set_ylim(0.5, 1.5)  
     ax2.axhline(y=1, color='black', linestyle='--', alpha=0.5) 
     ax2.grid(True, alpha=0.3)
 

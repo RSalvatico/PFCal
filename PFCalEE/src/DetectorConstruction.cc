@@ -393,29 +393,36 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
 	break;
     }
 
-<<<<<<< HEAD
-=======
-
      case v_HGCAL_2026TB_1:
     {
     G4cout << "[DetectorConstruction] starting v_HGCAL for 2026 testbeam"<< G4endl;
 
     std::vector<G4double> lThick;
 	  std::vector<G4double> lThickCu;
+    std::vector<G4double> lThickAir;
     std::vector<G4double> lThickAir1;
     std::vector<G4double> lThickAir2;
     std::vector<G4double> lThickPb;
     std::vector<G4double> lThickPCB1;
     std::vector<G4double> lThickPCB2;
-    std::vector<G4double> lThickScint;
+    std::vector<G4double> lThickScintfront;
+    std::vector<G4double> lThickScintback;
+    std::vector<G4double> lThickAl;
+    std::vector<G4double> lThickW;
+    std::vector<G4double> lThickW1;
 	  std::vector<std::string> lEle;
     std::vector<std::string> lEleCu;
+    std::vector<std::string> lEleAir;
     std::vector<std::string> lEleAir1;
     std::vector<std::string> lEleAir2;
     std::vector<std::string> lElePb;
     std::vector<std::string> lElePCB1;
     std::vector<std::string> lElePCB2;
-    std::vector<std::string> lEleScint;
+    std::vector<std::string> lEleScintfront;
+    std::vector<std::string> lEleScintback;
+    std::vector<std::string> lEleAl;
+    std::vector<std::string> lEleW;
+    std::vector<std::string> lEleW1;
 
 
         //ABSORBER + AIR VOLUME
@@ -432,15 +439,46 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
           lThick.push_back(absAirGap);   lEle.push_back("Air");
         }
 
+        // Tungsten Absorber (first two layers, as for the 2025 setup 2_1)
+        G4double absWThick(3.0*mm), absAirGap1(0.9*mm);
+        for(int iplate=0; iplate<3; iplate++) {
+          lThickW.push_back(absWThick);   lEleW.push_back("W");
+          if(iplate==2) continue;
+          lThickW.push_back(absAirGap1);   lEleW.push_back("Air");
+        }
 
-        // SCINTILATOR 
+        lThickW1.push_back(absWThick);   lEleW1.push_back("W");
+        lThickW1.push_back(absAirGap);   lEleW1.push_back("Air");
+        for(int iplate=0; iplate<2; iplate++) {
+          lThickW1.push_back(absSSteelThick);  lEleW1.push_back("SSteel");
+          lThickW1.push_back(absPbThick);  lEleW1.push_back("Pb");
+          lThickW1.push_back(absSSteelThick);  lEleW1.push_back("SSteel");
+          if(iplate==1) continue;
+          lThickW1.push_back(absAirGap);   lEleW1.push_back("Air");
+        }
+
+
+        // SCINTILATOR
    
-        lThickScint.push_back(20.0*cm);   lEleScint.push_back("Air"); // TO BE CHANGED
-        lThickScint.push_back(0.25*mm);   lEleScint.push_back("FR4");
-        lThickScint.push_back(3*mm);     lEleScint.push_back("Scintillator");
-        lThickScint.push_back(0.25*mm);   lEleScint.push_back("FR4");
-        lThickScint.push_back(1.6*mm);   lEleScint.push_back("PCB");
-        lThickScint.push_back(6.35*mm);  lEleScint.push_back("Cu");
+        // lThickScint.push_back(2.0*cm);   lEleScint.push_back("Air"); // TO BE CHANGED
+        // lThickScint.push_back(6.35*mm);  lEleScint.push_back("Cu");
+        // lThickScint.push_back(1.6*mm);   lEleScint.push_back("PCB");
+        lThickScintfront.push_back(0.25*mm);  lEleScintfront.push_back("FR4");
+        lThickScintfront.push_back(8*mm);     lEleScintfront.push_back("Scintillator");
+        lThickScintfront.push_back(0.25*mm);  lEleScintfront.push_back("FR4");
+        lThickScintfront.push_back(1.6*mm);   lEleScintfront.push_back("PCB");
+        lThickScintfront.push_back(6.35*mm);  lEleScintfront.push_back("Cu");
+        
+        lThickScintback.push_back(6.35*mm);  lEleScintback.push_back("Cu");
+        lThickScintback.push_back(1.6*mm);   lEleScintback.push_back("PCB");
+        lThickScintback.push_back(0.25*mm);  lEleScintback.push_back("FR4");
+        lThickScintback.push_back(8*mm);     lEleScintback.push_back("Scintillator");
+        lThickScintback.push_back(0.25*mm);  lEleScintback.push_back("FR4");
+
+
+        // Al plate and air around scint
+        lThickAl.push_back(2.0*mm);  lEleAl.push_back("Al");
+        lThickAir.push_back(5.0*cm); lEleAir.push_back("Air");
 
           
         //MODULE - COOLING PLATE
@@ -492,7 +530,15 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
         // m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
         // m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
         for(int layer=0; layer<6; layer++){
-          m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+          if (layer == 0) {
+            m_caloStruct.push_back( SamplingSection(lThickW,lEleW) );
+          }
+          else if (layer == 1) {
+            m_caloStruct.push_back( SamplingSection(lThickW1,lEleW1) );
+          }
+          else {
+            m_caloStruct.push_back( SamplingSection(lThick,lEle) );
+          }
           m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
           m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
           m_caloStruct.push_back( SamplingSection(lThickCu,lEleCu) );
@@ -500,15 +546,20 @@ DetectorConstruction::DetectorConstruction(G4int ver, G4int mod,
           // if(layer!=5) m_caloStruct.push_back( SamplingSection(lThickAir2,lEleAir2) );
           m_caloStruct.push_back( SamplingSection(lThickAir2,lEleAir2) );
         }
-        // m_caloStruct.push_back( SamplingSection(lThickScint,lEleScint) );
-        // m_caloStruct.push_back( SamplingSection(lThickAir1,lEleAir1) );
-        // m_caloStruct.push_back( SamplingSection(lThickPCB1,lElePCB1) );
+        // Tileboard box: Cu/PCB/FR4/Scintillator/FR4 stack, x2 (two independent readout
+        // sections, each pushed separately so they each get their own measuredE()/absorberE())
+        m_caloStruct.push_back( SamplingSection(lThickAl,lEleAl) );
+        m_caloStruct.push_back( SamplingSection(lThickAir,lEleAir) );
+        m_caloStruct.push_back( SamplingSection(lThickScintfront,lEleScintfront) );
+        m_caloStruct.push_back( SamplingSection(lThickAl,lEleAl) );
+        m_caloStruct.push_back( SamplingSection(lThickScintback,lEleScintback) );
+        m_caloStruct.push_back( SamplingSection(lThickAir,lEleAir) );
+        m_caloStruct.push_back( SamplingSection(lThickAl,lEleAl) );
         m_caloStruct.push_back(SamplingSection(lThickPb,lElePb));
         
 	break;
     }
 
->>>>>>> fa8e8bf (update of geometry for 2026TB)
     case v_HGCAL_100mPb:
     {
        G4cout << "[DetectorConstruction] starting 50 m of lead"<< G4endl;
@@ -1987,6 +2038,11 @@ void DetectorConstruction::DefineMaterials()
   m_materials["PCB"]->AddMaterial(m_materials["H"]  , 0.068442752);
   m_materials["PCB"]->AddMaterial(m_materials["Br"] , 0.067109079);
   m_dEdx["PCB"] =  0.399; //matching CMSSW
+
+  // Bare FR4 sheets (e.g. either side of a scintillator tile) — same material as the PCB
+  // board above, kept under its own key so it can be labelled/tracked as a separate layer.
+  m_materials["FR4"] = m_materials["PCB"];
+  m_dEdx["FR4"] = m_dEdx["PCB"];
 
   m_materials["Brass"]= new G4Material("Brass",8.53*g/cm3,2);
   m_materials["Brass"]->AddMaterial(m_materials["Cu"]  , 70*perCent);
